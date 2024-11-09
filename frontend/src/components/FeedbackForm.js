@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const FeedbackForm = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState('');
@@ -10,10 +11,11 @@ const FeedbackForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('Submitting...');
-
+  
     try {
-      const response = await axios.post('/feedback', { email, message });
+      const response = await axios.post('/feedback', { name, email, message });
       setStatus('Feedback submitted successfully!');
+      setName('');
       setEmail('');
       setMessage('');
     } catch (error) {
@@ -25,6 +27,17 @@ const FeedbackForm = () => {
     <div className="container mt-5">
       <h2 className="mb-4">Submit Feedback</h2>
       <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">Name</label>
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email address</label>
           <input

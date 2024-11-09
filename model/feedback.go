@@ -7,9 +7,10 @@ import (
 )
 
 type Feedback struct {
-	ID      int
-	Email   string
-	Message string
+	ID      int    `json:"id"`
+	Name    string `json:"name"`
+	Email   string `json:"email"`
+	Message string `json:"message"`
 }
 
 func (f *Feedback) Validate() error {
@@ -27,12 +28,16 @@ func (f *Feedback) Validate() error {
 }
 
 func (f *Feedback) Save(db *sql.DB) error {
-	stmt, err := db.Prepare("INSERT INTO feedback(email, message) VALUES(?, ?)")
+	stmt, err := db.Prepare("INSERT INTO feedback(name, email, message) VALUES($1, $2, $3)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(f.Email, f.Message)
-	return err
+	_, err = stmt.Exec(f.Name, f.Email, f.Message)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
